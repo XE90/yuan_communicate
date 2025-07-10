@@ -1,5 +1,5 @@
 # yuan_communicate实时网络通信软件
-该软件能实现在同一网络下进行在线聊天，图片、文件传输功能。
+该软件能实现在网络连接下进行在线聊天，图片、文件传输功能。
 
 Developeing technology: Python + Pyside6 + socket
 
