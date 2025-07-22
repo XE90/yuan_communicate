@@ -6,6 +6,8 @@ Developeing technology: Python + Pyside6 + socket
 Author: Gavin.Xie
 Version: 1.0.2
 
+![yuan_communicate_GUI](./image/yuan_communicate_1.PNG)
+
 ## 文件结构
 ```
 ├── yuan_communicate.py           # 代码脚本
