@@ -14,11 +14,12 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout,QDialog,
 from PySide6.QtCore import Qt, Signal, QObject, QSize, QByteArray, QThread
 from PySide6.QtGui import QTextCursor, QPixmap, QTextDocument, QTextImageFormat, QColor
 import subprocess
+import platform
 
 '''
 tool_name = 'yuan_communicate'
-tool_ver = '1.0.2'
-release_date = '2025.07.09'
+tool_ver = '1.0.3'
+release_date = '2025.07.23'
 author = 'Gavin.Xie'
 '''
 
@@ -26,6 +27,15 @@ def run_cmd(cmd):
     out, err = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                 text=True, encoding='gbk', shell=True).communicate()
     return out, err
+
+def get_os_type():
+    system = platform.system()
+    if system == "Windows":
+        return "Windows"
+    elif system == "Linux":
+        return "Linux"
+    else:
+        return "Other (e.g., macOS)"
 
 class Communicate(QObject):
     message_received = Signal(str, str, str, str)  # 参数: sender, message, from_ip, to_ip
@@ -125,7 +135,15 @@ class WorkerThread(QThread):
         self.args = args
 
     def check_net_connect_status(self):
-        cmd = f'ping www.baidu.com'
+        os_type = get_os_type()
+        if os_type == 'Windows':
+            cmd = f'ping www.baidu.com'
+        elif os_type == 'Linux':
+            cmd = f'ping -c 4 www.baidu.com'
+        else:
+            msg = fr'Not support os_type: {os_type}'
+            self.output_signal.emit(msg, "red")
+            return
         self.output_signal.emit(f'{cmd} ...', "black")
         out, err = run_cmd(cmd)
         if err:
@@ -134,7 +152,10 @@ class WorkerThread(QThread):
             self.output_signal.emit(msg, "red")
         else:
             self.output_signal.emit(out, "black")
-            if '0% 丢失' in out or fr'0% Lost' in out:
+            if os_type == 'Windows' and ('0% 丢失' in out or fr'0% Lost' in out):
+                msg = '连接到Internet网络成功！'
+                self.output_signal.emit(msg, "green")
+            elif os_type == 'Linux' and '0% packet loss' in out:
                 msg = '连接到Internet网络成功！'
                 self.output_signal.emit(msg, "green")
             else:
@@ -254,7 +275,7 @@ class ChatWindow(QMainWindow):
         
         self.message_input = QTextEdit()
         self.message_input.setPlaceholderText("输入消息...")
-        self.message_input.setMaximumHeight(60)
+        self.message_input.setMinimumHeight(100)
         self.message_input.setLineWrapMode(QTextEdit.WidgetWidth)
         self.message_input.keyPressEvent = self.handle_key_press
         
@@ -434,7 +455,7 @@ class ChatWindow(QMainWindow):
             }
             
             QPushButton {
-                background-color: #4CAF50;
+                background-color: #45a049;
                 color: white;
                 border: none;
                 border-radius: 4px;

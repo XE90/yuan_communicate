@@ -4,7 +4,7 @@
 Developeing technology: Python + Pyside6 + socket
 
 Author: Gavin.Xie
-Version: 1.0.2
+Version: 1.0.3
 
 ![yuan_communicate_GUI](./image/yuan_communicate_1.PNG)
 
@@ -16,6 +16,9 @@ Version: 1.0.2
 x3012378557@outlook.com
 
 ## Version
+2025.07.23 v1.0.3
+修复在Linux中运行的的一些问题
+
 2025.07.09 v1.0.2
 加入’检查网络连接‘功能
 
